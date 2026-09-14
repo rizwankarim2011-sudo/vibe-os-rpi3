@@ -1,0 +1,34 @@
+name: Build Vibe-coder's OS Raspberry Edition
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Run Build Script
+        env:
+          VIBE_PASSWORD: ${{ secrets.VIBE_PASSWORD }}
+        run: |
+          chmod +x scripts/*.sh || true
+          if [ -f "./build.sh" ]; then
+            bash ./build.sh
+          elif [ -f "./scripts/build.sh" ]; then
+            bash ./scripts/build.sh
+          else
+            echo "Executing custom build process..."
+          fi
+
+      - name: Upload OS Image Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: vibe-os-rpi3-image
+          path: |
+            *.img
+            output/*.img
+            build/*.img
+            *.zip
