@@ -8,7 +8,7 @@ need=(
   "layer/vibe-os/etc/xdg/labwc/autostart" "layer/vibe-os/systemd/vibe-os-backend.service"
   "layer/vibe-os/opt/vibe-os/backend/core.py" "layer/vibe-os/opt/vibe-os/backend/filesystem.py"
   "layer/vibe-os/opt/vibe-os/backend/system.py" "layer/vibe-os/opt/vibe-os/frontend/OS.html"
-  "layer/vibe-os/opt/vibe-os/frontend/OS.css" "layer/vibe-os/opt/vibe-os/frontend/OS.js" ".github/workflows/build-rpi3.yml"
+  "layer/vibe-os/opt/vibe-os/frontend/OS.css" "layer/vibe-os/opt/vibe-os/frontend/OS.js" ".github/workflows/build.yml"
 )
 for f in "${need[@]}"; do [ -f "$ROOT/$f" ] || { echo "MISSING: $f"; fail=1; }; done
 find "$ROOT" -type d -name __pycache__ -prune -exec rm -rf {} +
