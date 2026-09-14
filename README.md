@@ -1,3 +1,4 @@
+##Senior developers, please help me out##
 # Vibe-coder's OS — Raspberry Edition 1.3.0
 
 A Raspberry Pi 3 Model B+ focused Linux distribution layer built on the official Raspberry Pi OS / Debian ecosystem, with the Vibe-coder's OS desktop as its shell.
