@@ -1,0 +1,48 @@
+#!/bin/sh
+set -eu
+
+export VIBE_WORKSPACE="${VIBE_WORKSPACE:-$HOME/Workspace}"
+export XDG_CURRENT_DESKTOP="${XDG_CURRENT_DESKTOP:-VibeOS}"
+export XDG_SESSION_DESKTOP="${XDG_SESSION_DESKTOP:-vibe-os}"
+mkdir -p "$VIBE_WORKSPACE" "$HOME/.config/vibe-os/chromium"
+
+# The backend is a system service; wait for it instead of starting a second copy.
+ready=0
+for _ in $(seq 1 80); do
+    if curl -fsS --max-time 1 http://127.0.0.1:8765/api/health >/dev/null 2>&1; then
+        ready=1
+        break
+    fi
+    sleep 0.25
+done
+
+if [ "$ready" -ne 1 ]; then
+    echo "Vibe-coder's OS core service did not become ready." >&2
+    exit 1
+fi
+
+CHROMIUM=""
+if command -v chromium >/dev/null 2>&1; then
+    CHROMIUM="$(command -v chromium)"
+elif command -v chromium-browser >/dev/null 2>&1; then
+    CHROMIUM="$(command -v chromium-browser)"
+fi
+
+[ -n "$CHROMIUM" ] || { echo "Chromium is not installed." >&2; exit 1; }
+
+# Restart the shell if Chromium exits unexpectedly. A normal desktop shutdown
+# terminates the session and therefore also terminates this loop.
+while :; do
+    "$CHROMIUM" \
+      --ozone-platform=wayland \
+      --enable-features=UseOzonePlatform \
+      --kiosk \
+      --no-first-run \
+      --no-default-browser-check \
+      --disable-session-crashed-bubble \
+      --disable-infobars \
+      --start-maximized \
+      --user-data-dir="$HOME/.config/vibe-os/chromium" \
+      http://127.0.0.1:8765/OS.html || true
+    sleep 1
+done

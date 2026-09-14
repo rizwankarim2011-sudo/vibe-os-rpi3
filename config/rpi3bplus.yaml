@@ -1,0 +1,31 @@
+# Vibe-coder's OS — Raspberry Edition
+# Target: Raspberry Pi 3 Model B+ (BCM2837B0 / ARM64)
+# The same Raspberry Pi OS-style image is usable on microSD and USB mass storage.
+include:
+  file: trixie-minbase.yaml
+
+device:
+  layer: rpi3
+  variant: none
+  storage_type: sd
+  hostname: vibe-os-rpi3bplus
+  user1: vibe
+  user1sudo: passwd
+  user1groups: adm,dialout,cdrom,audio,users,video,games,plugdev,input,spi,i2c,gpio,render
+
+image:
+  layer: image-rpios
+  name: vibe-coders-os-rpi3bplus
+  compression: zstd
+  boot_part_size: 512M
+  root_part_size: 16G
+
+layer:
+  base: trixie-minbase
+  vibe: vibe-os
+
+locale:
+  default: en_IN.UTF-8
+  keyboard_keymap: us
+  keyboard_layout: English (US)
+  timezone: Asia/Kolkata

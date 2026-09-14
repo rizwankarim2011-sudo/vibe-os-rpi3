@@ -1,0 +1,9 @@
+NAME="Vibe-coder's OS — Raspberry Edition"
+ID=vibe-os
+ID_LIKE=debian
+PRETTY_NAME="Vibe-coder's OS — Raspberry Edition"
+VERSION="1.2.0"
+VERSION_ID="1.2"
+VARIANT="Raspberry Pi 3 Model B+"
+VIBE_SHELL="Vibe Pro Desktop"
+VIBE_BASE="Raspberry Pi OS / Debian Trixie"
