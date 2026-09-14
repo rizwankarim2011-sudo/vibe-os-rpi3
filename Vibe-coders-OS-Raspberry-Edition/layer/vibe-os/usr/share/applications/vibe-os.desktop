@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Application
+Name=Vibe-coder's OS
+Comment=Vibe Pro Desktop shell for Raspberry Pi
+Exec=/usr/local/bin/vibe-shell
+Terminal=false
+Categories=System;
