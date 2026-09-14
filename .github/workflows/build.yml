@@ -1,0 +1,79 @@
+name: Build Vibe-coder's OS Raspberry Edition
+
+on:
+  workflow_dispatch:
+    inputs:
+      host:
+        description: 'Build host'
+        required: true
+        default: 'arm64'
+        type: choice
+        options:
+          - arm64
+          - qemu
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ${{ inputs.host == 'qemu' && 'ubuntu-24.04' || 'ubuntu-24.04-arm' }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Enable QEMU for non-arm64 build
+        if: inputs.host == 'qemu'
+        uses: docker/setup-qemu-action@v3
+        with:
+          platforms: arm64
+
+      - name: Install QEMU/binfmt packages
+        if: inputs.host == 'qemu'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y qemu-user-static binfmt-support
+
+      - name: Make build and audit scripts executable
+        run: |
+          chmod +x build/*.sh scripts/*.sh
+
+      - name: Run project audit
+        run: |
+          ./scripts/audit.sh
+          ./scripts/check-project.sh
+
+      - name: Build Raspberry Pi image
+        env:
+          VIBE_PASSWORD: ${{ secrets.VIBE_PASSWORD }}
+          RPI_IMAGE_GEN_VERSION: v2.7.0
+        run: |
+          if [ -z "$VIBE_PASSWORD" ]; then
+            echo "::error::VIBE_PASSWORD secret is not configured."
+            exit 1
+          fi
+          ./build/build.sh
+
+      - name: Verify generated image
+        run: |
+          test -s release/Vibe-coders-OS-Raspberry-Edition-rpi3bplus.img.zst
+          test -s release/Vibe-coders-OS-Raspberry-Edition-rpi3bplus.img.zst.sha256
+          test -s release/Vibe-coders-OS-Raspberry-Edition-rpi3bplus.img
+          test -s release/Vibe-coders-OS-Raspberry-Edition-rpi3bplus.img.sha256
+          test -s release/Vibe-coders-OS-Raspberry-Edition-rpi3bplus-manifest.txt
+          test -s release/Vibe-coders-OS-Raspberry-Edition-rpi3bplus-partitions.txt
+
+      - name: Upload OS image artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: vibe-coders-os-rpi3bplus-image
+          if-no-files-found: error
+          compression-level: 0
+          path: |
+            release/Vibe-coders-OS-Raspberry-Edition-rpi3bplus.img.zst
+            release/Vibe-coders-OS-Raspberry-Edition-rpi3bplus.img.zst.sha256
+            release/Vibe-coders-OS-Raspberry-Edition-rpi3bplus.img
+            release/Vibe-coders-OS-Raspberry-Edition-rpi3bplus.img.sha256
+            release/Vibe-coders-OS-Raspberry-Edition-rpi3bplus-manifest.txt
+            release/Vibe-coders-OS-Raspberry-Edition-rpi3bplus-partitions.txt
