@@ -1,0 +1,4 @@
+#!/bin/sh
+# Raspberry Pi OS Bookworm/Trixie uses Wayland; labwc is the lightweight compositor.
+# Start the Vibe desktop shell after the Wayland session is ready.
+exec /usr/local/bin/vibe-shell

@@ -1,0 +1,16 @@
+# Pi 3B+ release checklist
+- [ ] SD boot
+- [ ] USB mass-storage boot
+- [ ] HDMI
+- [ ] keyboard/mouse
+- [ ] Wi-Fi / Ethernet
+- [ ] Bluetooth
+- [ ] audio
+- [ ] USB storage
+- [ ] filesystem operations
+- [ ] terminal
+- [ ] browser
+- [ ] lock/unlock
+- [ ] reboot/shutdown
+- [ ] updates
+- [ ] forced-power-loss recovery

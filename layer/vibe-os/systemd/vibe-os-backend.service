@@ -1,0 +1,28 @@
+[Unit]
+Description=Vibe-coder's OS Core Service
+After=local-fs.target dbus.service
+Wants=dbus.service network-online.target
+
+[Service]
+Type=simple
+User=vibe
+Group=vibe
+WorkingDirectory=/opt/vibe-os
+Environment=VIBE_WORKSPACE=/home/vibe/Workspace
+Environment=VIBE_OS_ROOT=/opt/vibe-os
+Environment=PYTHONUNBUFFERED=1
+ExecStart=/usr/bin/python3 /opt/vibe-os/backend/core.py
+Restart=on-failure
+RestartSec=2
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=read-only
+ReadWritePaths=/home/vibe/Workspace /tmp
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
+LockPersonality=true
+RestrictRealtime=true
+SystemCallArchitectures=native
+
+[Install]
+WantedBy=multi-user.target
